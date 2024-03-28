@@ -7,11 +7,19 @@ import { authActions } from "../../store/authSlice";
 import { useNavigate } from "react-router-dom";
 
 import { Box, Container, Paper, Typography, useTheme } from "@mui/material";
+import ToastMessageResponse from "./ToastMessageResponse";
+
+const initialToaseMessage = {
+  show: false,
+  severity: "",
+  message: "",
+};
 
 const Auth = () => {
   const { palette } = useTheme();
 
   const [signUp, setSignUp] = useState(false);
+  const [toastMessage, setToastMessage] = useState(initialToaseMessage);
 
   const dispatch = useDispatch();
   const [login] = useLoginMutation();
@@ -22,15 +30,24 @@ const Auth = () => {
   const handleLogin = async (email, password) => {
     try {
       const loginResult = await login({ email, password }).unwrap();
-      console.log(loginResult);
       if (loginResult.accessToken.length > 0) {
+        showToastMessageResponse({
+          severity: "success",
+          message: "Login successful",
+        });
         dispatch(authActions.loginSuccess(loginResult));
         navigate("/dashboard");
       } else {
-        alert("Login failed");
+        showToastMessageResponse({
+          severity: "error",
+          message: "Login failed",
+        });
       }
     } catch (err) {
-      console.log(err);
+      showToastMessageResponse({
+        severity: "error",
+        message: "internal error " + err,
+      });
     }
   };
 
@@ -48,8 +65,22 @@ const Auth = () => {
     }
   };
 
+  const showToastMessageResponse = ({ severity, message }) => {
+    setToastMessage({
+      show: true,
+      severity: severity,
+      message: message,
+    });
+  };
+
   return (
     <Box width="100%" height="100%">
+      <ToastMessageResponse
+        toastMessageResponse={toastMessage}
+        onClose={() => {
+          setToastMessage(initialToaseMessage);
+        }}
+      />
       <Container component="main" maxWidth="xs">
         <Paper
           elevation={3}
