@@ -22,7 +22,8 @@ const Auth = () => {
   const handleLogin = async (email, password) => {
     try {
       const loginResult = await login({ email, password }).unwrap();
-      if (loginResult.token.length > 0) {
+      console.log(loginResult);
+      if (loginResult.accessToken.length > 0) {
         dispatch(authActions.loginSuccess(loginResult));
         navigate("/dashboard");
       } else {
@@ -36,7 +37,7 @@ const Auth = () => {
   const handleSignUp = async (user) => {
     try {
       const signupResult = await signup({ ...user, role: "user" }).unwrap();
-      if (signupResult.token.length > 0) {
+      if (signupResult.accessToken.length > 0) {
         dispatch(authActions.loginSuccess(signupResult));
         navigate("/dashboard");
       } else {
