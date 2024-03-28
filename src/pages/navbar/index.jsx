@@ -13,7 +13,9 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const { isLoggedIn } = useSelector((state) => state.auth);
 
-  const handleLogout = async () => {};
+  const handleLogout = async () => {
+    dispatch(authActions.logout());
+  };
 
   useEffect(() => {
     const storedToken = localStorage.getItem("accessToken");
