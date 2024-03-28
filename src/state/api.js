@@ -5,7 +5,7 @@ export const blogApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.BASE_URL,
         prepareHeaders: (headers) => {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('accessToken');
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
             }

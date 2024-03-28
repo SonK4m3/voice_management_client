@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     isLoggedIn: false,
-    token: null,
+    accessToken: null,
     isLoading: false,
     error: null,
 };
@@ -17,19 +17,19 @@ const authSlice = createSlice({
         },
         loginSuccess(state, action) {
             state.isLoggedIn = true;
-            state.token = action.payload.token;
+            state.accessToken = action.payload.accessToken;
             state.isLoading = false;
             state.error = null;
 
-            localStorage.setItem('token', action.payload.token);
+            localStorage.setItem('accessToken', action.payload.accessToken);
         },
         logout(state) {
             state.isLoggedIn = false;
-            state.token = null;
+            state.accessToken = null;
             state.isLoading = false;
             state.error = null;
 
-            localStorage.removeItem('token');
+            localStorage.removeItem('accessToken');
             window.location.reload();
         },
         // ... (Add logout, error handling as needed)

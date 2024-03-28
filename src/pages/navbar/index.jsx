@@ -16,10 +16,10 @@ const Navbar = () => {
   const handleLogout = async () => {};
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+    const storedToken = localStorage.getItem("accessToken");
     if (storedToken) {
       setSelected("dashboard");
-      dispatch(authActions.loginSuccess({ token: storedToken }));
+      dispatch(authActions.loginSuccess({ accessToken: storedToken }));
     }
   }, [dispatch]);
 
