@@ -35,19 +35,24 @@ const Auth = () => {
           severity: "success",
           message: "Login successful",
         });
+
         dispatch(authActions.loginSuccess(loginResult));
-        navigate("/dashboard");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 500);
+      }
+    } catch (err) {
+      if (err.status === 401) {
+        showToastMessageResponse({
+          severity: "error",
+          message: err.data.message,
+        });
       } else {
         showToastMessageResponse({
           severity: "error",
-          message: "Login failed",
+          message: "internal error " + err,
         });
       }
-    } catch (err) {
-      showToastMessageResponse({
-        severity: "error",
-        message: "internal error " + err,
-      });
     }
   };
 
@@ -55,13 +60,32 @@ const Auth = () => {
     try {
       const signupResult = await signup({ ...user, role: "user" }).unwrap();
       if (signupResult.accessToken.length > 0) {
+        showToastMessageResponse({
+          severity: "success",
+          message: "Register successful",
+        });
         dispatch(authActions.loginSuccess(signupResult));
-        navigate("/dashboard");
-      } else {
-        alert("Register failed");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 500);
       }
     } catch (err) {
-      console.log(err);
+      if (err.status === 400) {
+        showToastMessageResponse({
+          severity: "error",
+          message: "Fields be must match format",
+        });
+      } else if (err.status === 500) {
+        showToastMessageResponse({
+          severity: "error",
+          message: "Email has been registered",
+        });
+      } else {
+        showToastMessageResponse({
+          severity: "error",
+          message: "internal error " + err,
+        });
+      }
     }
   };
 

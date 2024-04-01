@@ -1,10 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { parseJWT } from '../utils/parse';
+
+const initialUser = {
+    id: null,
+    email: null,
+    name: null,
+    role: null,
+    iat: null,
+}
 
 const initialState = {
     isLoggedIn: false,
     accessToken: null,
     isLoading: false,
     error: null,
+    user: initialUser
 };
 
 const authSlice = createSlice({
@@ -23,12 +33,16 @@ const authSlice = createSlice({
             state.error = null;
 
             localStorage.setItem('accessToken', action.payload.accessToken);
+            const decoded = parseJWT(action.payload.accessToken);
+            state.user = decoded;
+
         },
         logout(state) {
             state.isLoggedIn = false;
             state.accessToken = null;
             state.isLoading = false;
             state.error = null;
+            state.user = initialUser;
 
             localStorage.removeItem('accessToken');
             window.location.reload();
