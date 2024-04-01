@@ -6,12 +6,12 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { authApi, blogApi } from './state/api';
+import { authApi, blogApi, fooApi } from './state/api';
 import { rootReducer } from './state';
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefault) => getDefault().concat(blogApi.middleware, authApi.middleware),
+  middleware: (getDefault) => getDefault().concat(blogApi.middleware, authApi.middleware, fooApi.middleware),
 });
 setupListeners(store.dispatch);
 

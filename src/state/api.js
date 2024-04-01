@@ -45,5 +45,33 @@ export const authApi = createApi({
     }),
 });
 
+export const fooApi = createApi({
+    reducerPath: 'fooApi',
+    baseQuery: fetchBaseQuery({
+        baseUrl: process.env.REACT_APP_API_URL,
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem('accessToken');
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+            return headers;
+        },
+    }),
+    tagTypes: ['Foo'],
+    endpoints: (builder) => ({
+        getParamById: builder.query({
+            query: ({ ids, id }) => ({
+                url: `foo/param/${ids}?id=${id}`,
+            }),
+        }),
+        getAdminParamById: builder.query({
+            query: ({ ids, id }) => ({
+                url: `foo/admin/param/${ids}?id=${id}`,
+            }),
+        }),
+    }),
+});
+
+export const { useGetAdminParamByIdQuery, useGetParamByIdQuery } = fooApi;
 export const { useGetPostsQuery } = blogApi;
 export const { useLoginMutation, useSignupMutation } = authApi;
