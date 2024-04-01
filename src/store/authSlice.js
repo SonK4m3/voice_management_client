@@ -10,6 +10,7 @@ const initialState = {
 const authSlice = createSlice({
     name: 'auth',
     initialState,
+    reducerPath: 'auth',
     reducers: {
         loginStart(state) {
             state.isLoading = true;
@@ -37,4 +38,4 @@ const authSlice = createSlice({
 });
 
 export const authActions = authSlice.actions;
-export default authSlice.reducer;
+export default authSlice;

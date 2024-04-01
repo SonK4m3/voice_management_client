@@ -7,9 +7,6 @@ const LoginForm = ({ onSubmit }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [showPassword, setShowPassword] = useState(false);
-  const handleShowPassword = () => setShowPassword(!showPassword);
-
   const handleSubmit = (event) => {
     event.preventDefault();
     onSubmit(email, password);
@@ -33,7 +30,7 @@ const LoginForm = ({ onSubmit }) => {
           <GreyTextField
             label="Password"
             name="password"
-            type={showPassword ? "text" : "password"}
+            type={"password"}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             fullWidth
