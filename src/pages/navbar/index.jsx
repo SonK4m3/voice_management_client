@@ -5,6 +5,7 @@ import PixIcon from "@mui/icons-material/Pix";
 import FlexBetween from "../../components/FlextBetween";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../store/authSlice";
+import Profile from "./Profile";
 
 const Navbar = () => {
   const { palette } = useTheme();
@@ -73,9 +74,12 @@ const Navbar = () => {
         </Box>
 
         {isLoggedIn ? (
-          <Button variant="contained" color="error" onClick={handleLogout}>
-            Logout
-          </Button>
+          <FlexBetween gap={2}>
+            <Profile />
+            <Button variant="contained" color="error" onClick={handleLogout}>
+              Logout
+            </Button>
+          </FlexBetween>
         ) : (
           <Button
             variant="contained"
