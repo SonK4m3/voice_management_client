@@ -5,7 +5,7 @@ import authSlice from '../store/authSlice';
 const rootReducer = combineReducers({
     [blogApi.reducerPath]: blogApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
-    ['auth']: authSlice,
+    [authSlice.reducerPath]: authSlice.reducer,
 });
 
 export { rootReducer };

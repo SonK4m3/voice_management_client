@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const blogApi = createApi({
     reducerPath: 'blogApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: process.env.BASE_URL,
+        baseUrl: process.env.REACT_APP_API_URL,
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');
             if (token) {
@@ -24,7 +24,7 @@ export const blogApi = createApi({
 export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://10.144.13.87:8686/api",
+        baseUrl: process.env.REACT_APP_API_URL,
     }),
     endpoints: (builder) => ({
         login: builder.mutation({
@@ -41,16 +41,9 @@ export const authApi = createApi({
                 body: credentials,
             }),
         }),
-        oauth: builder.mutation({
-            query: (props) => ({
-                url: props.provider === 'fb' ? '/auth/facebook' : '/auth/google',
-                method: 'POST',
-                body: props.credentials,
-            }),
-        }),
         // ... other endpoints
     }),
 });
 
 export const { useGetPostsQuery } = blogApi;
-export const { useLoginMutation, useSignupMutation, useOauthMutation } = authApi;
+export const { useLoginMutation, useSignupMutation } = authApi;
