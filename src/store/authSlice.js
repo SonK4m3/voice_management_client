@@ -7,6 +7,7 @@ const initialUser = {
     name: null,
     role: null,
     iat: null,
+    exp: null,
 }
 
 const initialState = {

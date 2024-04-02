@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, useMediaQuery, useTheme, Button } from "@mui/material";
+import React from "react";
+import { Box } from "@mui/material";
 import DashboardBox from "../../components/DashboardBox";
 import MessageBoxWithButton from "./MessageBoxWithButton";
 import {
@@ -11,7 +11,7 @@ const Dashboard = () => {
   // const isAboutMediumScreens = useMediaQuery("(min-width: 1200px");
   // const { palette } = useTheme();
 
-  const { data, error, refetch } = useGetAdminParamByIdQuery({
+  const getAdminParam = useGetAdminParamByIdQuery({
     ids: 123,
     id: 456,
   });
@@ -21,20 +21,12 @@ const Dashboard = () => {
     id: 456,
   });
 
-  const onButtonClickAdmin = async () => {
-    try {
-      refetch();
-    } catch (err) {
-      console.log(err);
-    }
+  const onButtonClickAdmin = () => {
+    getAdminParam.refetch();
   };
 
-  const onButtonClick = async () => {
-    try {
-      getParam.refetch();
-    } catch (err) {
-      console.log(err);
-    }
+  const onButtonClick = () => {
+    getParam.refetch();
   };
 
   return (
@@ -42,7 +34,7 @@ const Dashboard = () => {
       <DashboardBox>
         <MessageBoxWithButton
           key="user-foo"
-          message={JSON.stringify(getParam.data)}
+          queryResult={getParam}
           buttonText="Foo with user"
           onButtonClick={onButtonClick}
         />
@@ -50,9 +42,7 @@ const Dashboard = () => {
       <DashboardBox>
         <MessageBoxWithButton
           key="admin-foo"
-          message={JSON.stringify(
-            data || { message: "user is not allowed to get this api" }
-          )}
+          queryResult={getAdminParam}
           buttonText="Foo with admin"
           onButtonClick={onButtonClickAdmin}
         />
