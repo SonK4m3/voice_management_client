@@ -10,7 +10,7 @@ import { isTokenExpired, parseJWT } from "../../utils/parse";
 
 const Navbar = () => {
   const { palette } = useTheme();
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState("dashboard");
 
   const dispatch = useDispatch();
   const { isLoggedIn, user } = useSelector((state) => state.auth);
