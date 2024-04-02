@@ -13,3 +13,14 @@ export const parseJWT = (token) => {
         return null;
     }
 };
+
+export const isTokenExpired = (payload) => {
+    if (!payload) {
+        return true;
+    }
+
+    const currentTime = Math.floor(Date.now() / 1000);
+    const { exp } = payload;
+
+    return currentTime > exp;
+}

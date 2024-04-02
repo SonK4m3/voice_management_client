@@ -1,11 +1,12 @@
 import React from "react";
 import { Box } from "@mui/material";
-import { useSelector } from "react-redux";
 import OverFlowGraphy from "../../components/OverFlowTypography";
 import Stack from "@mui/material/Stack";
 
-const Profile = () => {
-  const { name, role } = useSelector((state) => state.auth.user);
+const Profile = ({ user }) => {
+  if (user === null) return;
+
+  const { name, role } = user;
 
   return (
     <Box>

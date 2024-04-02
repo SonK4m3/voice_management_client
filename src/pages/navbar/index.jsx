@@ -6,24 +6,36 @@ import FlexBetween from "../../components/FlextBetween";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../store/authSlice";
 import Profile from "./Profile";
+import { isTokenExpired, parseJWT } from "../../utils/parse";
 
 const Navbar = () => {
   const { palette } = useTheme();
   const [selected, setSelected] = useState("");
 
   const dispatch = useDispatch();
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { isLoggedIn, user } = useSelector((state) => state.auth);
 
   const handleLogout = async () => {
     dispatch(authActions.logout());
   };
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("accessToken");
-    if (storedToken) {
-      setSelected("dashboard");
-      dispatch(authActions.loginSuccess({ accessToken: storedToken }));
+    const token = localStorage.getItem("accessToken");
+    const userPayload = parseJWT(token);
+
+    if (token && !isTokenExpired(userPayload)) {
+      dispatch(authActions.loginSuccess({ accessToken: token }));
     }
+
+    const checkTokenExpiration = () => {
+      if (token && isTokenExpired(userPayload)) {
+        dispatch(authActions.logout());
+      }
+    };
+
+    const tokenCheckInterval = setInterval(checkTokenExpiration, 1000);
+
+    return () => clearInterval(tokenCheckInterval);
   }, [dispatch]);
 
   return (
@@ -75,7 +87,7 @@ const Navbar = () => {
 
         {isLoggedIn ? (
           <FlexBetween gap={2}>
-            <Profile />
+            <Profile user={user} />
             <Button variant="contained" color="error" onClick={handleLogout}>
               Logout
             </Button>

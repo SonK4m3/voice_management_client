@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignupForm";
 import { useDispatch } from "react-redux";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Box, Container, Paper, Typography, useTheme } from "@mui/material";
 import ToastMessageResponse from "./ToastMessageResponse";
+import { isTokenExpired, parseJWT } from "../../utils/parse";
 
 const initialToaseMessage = {
   show: false,
@@ -96,6 +97,15 @@ const Auth = () => {
       message: message,
     });
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    const userPayload = parseJWT(token);
+
+    if (token && !isTokenExpired(userPayload)) {
+      navigate("/dashboard");
+    }
+  });
 
   return (
     <Box width="100%" height="100%">
