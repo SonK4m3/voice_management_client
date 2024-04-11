@@ -24,3 +24,7 @@ export const isTokenExpired = (payload) => {
 
     return currentTime > exp;
 }
+
+export const isValidToken = (token) => {
+    return token !== null && token !== undefined
+}
