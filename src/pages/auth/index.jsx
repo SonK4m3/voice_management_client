@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Box, Container, Paper, Typography, useTheme } from "@mui/material";
 import ToastMessageResponse from "./ToastMessageResponse";
-import { isTokenExpired, parseJWT } from "../../utils/parse";
+import { isTokenExpired, isValidToken, parseJWT } from "../../utils/parse";
 
 const initialToaseMessage = {
   show: false,
@@ -100,12 +100,15 @@ const Auth = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    const userPayload = parseJWT(token);
+    if (isValidToken(token)) {
+      const userPayload = parseJWT(token);
 
-    if (token && !isTokenExpired(userPayload)) {
-      navigate("/dashboard");
+      if (!isTokenExpired(userPayload)) {
+        dispatch(authActions.loginSuccess({ accessToken: token }));
+        navigate("/home");
+      }
     }
-  });
+  }, [dispatch, navigate]);
 
   return (
     <Box width="100%" height="100%">

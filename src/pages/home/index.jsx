@@ -1,33 +1,11 @@
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import Logo from "./logo.svg";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import DashboardBox from "../../components/DashboardBox";
 
 const Index = () => {
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
-          Material UI Create React App example
-        </Typography>
-        <img src={Logo} alt="logo" />
-        <Copyright />
-      </Box>
-    </Container>
+    <Box width="100%" height="100%" display="grid" gap="1.5rem">
+      <DashboardBox>AAAA</DashboardBox>
+    </Box>
   );
 };
 

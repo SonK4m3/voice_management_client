@@ -6,6 +6,10 @@ import { useMemo } from "react";
 import Dashboard from "./pages/dashboard";
 import Navbar from "./pages/navbar";
 import Auth from "./pages/auth";
+import Home from "./pages/home";
+import PrivateRoute from "./components/PrivateRoute";
+import Cdr from "./pages/cdr";
+import PublicRoute from "./components/PublicRoute";
 
 function App() {
   const theme = useMemo(() => createTheme(themeSettings), []);
@@ -18,12 +22,14 @@ function App() {
           <Box width="100%" height="100%" padding="1rem 2rem 4rem 2rem">
             <Navbar />
             <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route
-                path="/predictions"
-                element={<div>Predictions page</div>}
-              />
-              <Route path="/auth" element={<Auth />} />
+              <Route exact path="/" element={<PrivateRoute />}>
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="cdr" element={<Cdr />} />
+              </Route>
+              <Route exact path="/" element={<PublicRoute />}>
+                <Route path="home" element={<Home />} />
+                <Route path="auth" element={<Auth />} />
+              </Route>
             </Routes>
           </Box>
         </ThemeProvider>

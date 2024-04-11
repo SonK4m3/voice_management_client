@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import PixIcon from "@mui/icons-material/Pix";
@@ -6,7 +6,6 @@ import FlexBetween from "../../components/FlextBetween";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../store/authSlice";
 import Profile from "./Profile";
-import { isTokenExpired, parseJWT } from "../../utils/parse";
 
 const Navbar = () => {
   const { palette } = useTheme();
@@ -19,25 +18,6 @@ const Navbar = () => {
     dispatch(authActions.logout());
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    const userPayload = parseJWT(token);
-
-    if (token && !isTokenExpired(userPayload)) {
-      dispatch(authActions.loginSuccess({ accessToken: token }));
-    }
-
-    const checkTokenExpiration = () => {
-      if (token && isTokenExpired(userPayload)) {
-        dispatch(authActions.logout());
-      }
-    };
-
-    const tokenCheckInterval = setInterval(checkTokenExpiration, 1000);
-
-    return () => clearInterval(tokenCheckInterval);
-  }, [dispatch]);
-
   return (
     <FlexBetween mb="0.25rem" p="0.5rem 0rem" color={palette.grey[300]}>
       <FlexBetween gap="0.75rem">
@@ -48,6 +28,24 @@ const Navbar = () => {
       </FlexBetween>
 
       <FlexBetween gap="2rem">
+        <Box
+          sx={{
+            "&:hover": {
+              color: "#d0fcf4",
+            },
+          }}
+        >
+          <Link
+            to="/home"
+            onClick={() => setSelected("predictions")}
+            style={{
+              color: selected === "predictions" ? "inherit" : palette.grey[700],
+              textDecoration: "inherit",
+            }}
+          >
+            Home
+          </Link>
+        </Box>
         <Box
           sx={{
             "&:hover": {
@@ -74,14 +72,14 @@ const Navbar = () => {
           }}
         >
           <Link
-            to="/predictions"
-            onClick={() => setSelected("predictions")}
+            to="/cdr"
+            onClick={() => setSelected("cdr")}
             style={{
-              color: selected === "predictions" ? "inherit" : palette.grey[700],
+              color: selected === "cdr" ? "inherit" : palette.grey[700],
               textDecoration: "inherit",
             }}
           >
-            Predictions
+            Cdr
           </Link>
         </Box>
 
@@ -93,15 +91,14 @@ const Navbar = () => {
             </Button>
           </FlexBetween>
         ) : (
-          <Button
-            variant="contained"
-            href="/auth"
+          <Link
+            to="/auth"
             onClick={() => {
               setSelected("auth");
             }}
           >
-            Login
-          </Button>
+            <Button variant="contained">Login</Button>
+          </Link>
         )}
       </FlexBetween>
     </FlexBetween>
