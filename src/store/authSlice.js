@@ -48,9 +48,20 @@ const authSlice = createSlice({
             localStorage.removeItem('accessToken');
             window.location.reload();
         },
+        relogin(state, action) {
+            state.isLoggedIn = true;
+            state.accessToken = action.payload.accessToken;
+            state.isLoading = false;
+            state.error = null;
+
+            const decoded = parseJWT(action.payload.accessToken);
+            state.user = decoded;
+
+        },
         // ... (Add logout, error handling as needed)
     },
 });
 
+export const selectIsLoggedIn = state => state.auth.isLoggedIn;
 export const authActions = authSlice.actions;
 export default authSlice;
