@@ -2,6 +2,7 @@ import React from "react";
 import { Box } from "@mui/material";
 import OverFlowGraphy from "../../components/OverFlowTypography";
 import Stack from "@mui/material/Stack";
+import { Link } from "react-router-dom";
 
 const Profile = ({ user }) => {
   if (user === null) return;
@@ -16,9 +17,22 @@ const Profile = ({ user }) => {
         </OverFlowGraphy>
         <OverFlowGraphy
           variant="caption"
-          color={role === "user" ? "beige" : "green"}
+          color={role === "admin" ? "green" : "beige"}
         >
-          {role || ""}
+          {(role &&
+            (role === "admin" ? (
+              <Link
+                to="/admin"
+                style={{
+                  color: "green",
+                }}
+              >
+                admin
+              </Link>
+            ) : (
+              role
+            ))) ||
+            ""}
         </OverFlowGraphy>
       </Stack>
     </Box>

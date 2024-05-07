@@ -1,8 +1,10 @@
 import { Box, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import AudioPlayer from "./AudioPlayer";
 import { useGetCdrsQuery } from "../../state/cdrApi";
-import CallRecordingList from "./CallRecordingList";
+import CallingSearch from "./CallingSearch";
+import CallingGrid from "./CallingGrid";
+import { RecordProvider } from "../../layouts/RecordProvider";
 
 const Cdr = () => {
   const { data, isSuccess } = useGetCdrsQuery({
@@ -10,30 +12,26 @@ const Cdr = () => {
     limit: 5,
   });
 
-  const [currentRecording, setCurrentRecording] = useState(null);
-
-  const handleClickRecording = (recordPath) => {
-    console.log(recordPath);
-    setCurrentRecording(recordPath);
-  };
-
   return (
     <Box width="100%" height="100%">
-      <Typography variant="h1" color="lightskyblue">
-        Calling record
+      <Typography variant="h1" color="darkPallete.light">
+        Lịch sử cuộc gọi
       </Typography>
-      <Box mt={3}>
-        <AudioPlayer recordPath={currentRecording} />
+      <Box width="100%" mt={2}>
+        <CallingSearch />
       </Box>
+      <RecordProvider>
+        <Box mt={3} mb={2}>
+          <AudioPlayer />
+        </Box>
 
-      <Box mt="2rem" bgcolor="white" borderRadius={3}>
-        {isSuccess && (
-          <CallRecordingList
-            callRecordings={data}
-            onClickRecord={handleClickRecording}
-          />
-        )}
-      </Box>
+        <Typography variant="h2" color="darkPallete.light">
+          Cuộc gọi trực tiếp
+        </Typography>
+        <Box mt="2rem" bgcolor="white" borderRadius={3}>
+          {isSuccess && <CallingGrid callRecordings={data} />}
+        </Box>
+      </RecordProvider>
     </Box>
   );
 };

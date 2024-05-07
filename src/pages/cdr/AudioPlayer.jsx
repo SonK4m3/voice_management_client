@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Container, Box, Typography } from "@mui/material";
+import { Container, Box, Typography, Button } from "@mui/material";
 import ReactPlayer from "react-player";
+import { useRecord } from "../../layouts/RecordProvider";
 
-const AudioPlayer = ({ recordPath }) => {
+const AudioPlayer = () => {
   const [audioUrl, setAudioUrl] = useState(null);
+  const { recordPath } = useRecord();
+
+  const [publicPath, setPublicPath] = useState("");
 
   useEffect(() => {
     const handleFetchAudio = async () => {
@@ -32,9 +36,21 @@ const AudioPlayer = ({ recordPath }) => {
         <Typography variant="h4" color="initial">
           Recording
         </Typography>
-        {/* <Button variant="contained" onClick={handleFetchAudio}>
-        Fetch WAV File
-      </Button> */}
+        <ReactPlayer
+          url={publicPath}
+          controls
+          playing
+          width="100%"
+          height="50px"
+        />
+        <Button
+          variant="contained"
+          onClick={() => {
+            setPublicPath("0a032020-17e3-4774-b452-2522d426b4ac.wav");
+          }}
+        >
+          Nghe cuộc gọi public
+        </Button>
         <Box mt="1rem">
           {audioUrl && (
             <ReactPlayer

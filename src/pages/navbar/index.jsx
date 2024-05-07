@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Button, Typography, useTheme } from "@mui/material";
+import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import PixIcon from "@mui/icons-material/Pix";
-import FlexBetween from "../../components/FlextBetween";
+import FlexBetween from "../../components/FlexBetween";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../store/authSlice";
 import Profile from "./Profile";
+import MenuIcon from "@mui/icons-material/Menu";
+import { openDrawer } from "../../store/drawerSlice";
 
 const Navbar = () => {
   const { palette } = useTheme();
@@ -18,10 +20,28 @@ const Navbar = () => {
     dispatch(authActions.logout());
   };
 
+  const handleDrawerToggle = () => {
+    dispatch(openDrawer());
+  };
+
   return (
-    <FlexBetween mb="0.25rem" p="0.5rem 0rem" color={palette.grey[300]}>
+    <FlexBetween mb="0.25rem" p="0.25rem 0rem" color={palette.grey[300]}>
       <FlexBetween gap="0.75rem">
-        <PixIcon sx={{ fontSize: "28px" }} />
+        <IconButton
+          aria-label="expanded drawler"
+          color="primary"
+          onClick={handleDrawerToggle}
+        >
+          <MenuIcon
+            sx={{
+              fontSize: "32px",
+              padding: "5px",
+              border: "1px solid",
+              borderRadius: "6px",
+            }}
+          />
+        </IconButton>
+        <PixIcon sx={{ fontSize: "40px" }} />
         <Typography variant="h4" fontSize="16px">
           Sonkame
         </Typography>
@@ -37,9 +57,9 @@ const Navbar = () => {
         >
           <Link
             to="/home"
-            onClick={() => setSelected("predictions")}
+            onClick={() => setSelected("home")}
             style={{
-              color: selected === "predictions" ? "inherit" : palette.grey[700],
+              color: selected === "home" ? "inherit" : palette.grey[700],
               textDecoration: "inherit",
             }}
           >

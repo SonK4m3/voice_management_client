@@ -9,8 +9,6 @@ import {
 } from "@mui/material";
 import { formatTimestamp } from "../../utils/timeUtil";
 
-// ... (The callRecordings array from above)
-
 function CallRecordingList({ callRecordings, onClickRecord }) {
   return (
     <Grid container spacing={2}>

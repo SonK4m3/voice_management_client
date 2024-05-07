@@ -44,6 +44,17 @@ export const tokens = {
     },
 };
 
+const darkPallete = {
+    dark: "#1f2026",
+    grey: "#31363F",
+    light: "#b3b6c2",
+    blue: "#2F58CD",
+    green: {
+        default: "#65B741",
+        hover: "#C1F2B0"
+    }
+}
+
 // mui theme settings
 export const themeSettings = {
     palette: {
@@ -67,6 +78,9 @@ export const themeSettings = {
             default: tokens.background.main,
             light: tokens.background.light,
         },
+        darkPallete: {
+            ...darkPallete
+        }
     },
     typography: {
         fontFamily: ["Inter", "sans-serif"].join(","),
