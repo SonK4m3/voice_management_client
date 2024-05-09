@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FormControl,
   FormGroup,
@@ -12,32 +12,57 @@ import CreateNewRoleForm from "./CreateNewRoleForm";
 import AddIcon from "@mui/icons-material/Add";
 import FlexCenter from "../../../components/FlexCenter";
 import ButtonModal from "../../components/ButtonModal";
+import RemoveIcon from "@mui/icons-material/Remove";
 
-const ROLES = [
-  { id: 1, name: "Admin", isActive: true },
-  { id: 2, name: "User", isActive: false },
-  { id: 3, name: "Manager", isActive: true },
-  { id: 4, name: "Guest", isActive: true },
-  { id: 5, name: "Superuser", isActive: true },
-];
+import {
+  useGetRolesQuery,
+  useCreateRoleMutation,
+  useUpdateActiveRolesMutation,
+} from "../../../state/authorizeApi";
+import ToastMessageResponse from "../../auth/ToastMessageResponse";
+import ErrorIconButton from "../../../components/ErrorIconButton";
+import FlexBetween from "../../../components/FlexBetween";
+
+const initialToaseMessage = {
+  show: false,
+  severity: "",
+  message: "",
+};
 
 const RoleManager = () => {
-  const [roles, setRoles] = useState(ROLES);
-  const [preRoles, setPreRoles] = useState(ROLES);
+  const { data: roles, isSuccess, refetch: refetchRoles } = useGetRolesQuery();
+  const [createRole] = useCreateRoleMutation();
+  const [updateActiveRoles] = useUpdateActiveRolesMutation();
+  const [preRoles, setPreRoles] = useState(null);
 
   const [isChecked, setIsChecked] = useState(false);
+  const [toastMessage, setToastMessage] = useState(initialToaseMessage);
 
-  const handleCreateRole = (newRoleName) => {
+  const showToastMessageResponse = ({ severity, message }) => {
+    setToastMessage({
+      show: true,
+      severity: severity,
+      message: message,
+    });
+  };
+
+  const handleCreateRole = async (newRoleName, callback) => {
     const newRole = {
-      id: roles.length + 1,
       name: newRoleName,
-      isActive: true,
     };
-
     //TODO: send request to server
-
-    setRoles([...roles, newRole]);
-    setPreRoles([...roles, newRole]);
+    try {
+      await createRole(newRole).unwrap();
+      callback();
+      refetchRoles();
+    } catch (err) {
+      showToastMessageResponse({
+        severity: "",
+        message: err.data?.message || err.message,
+      });
+    }
+    // setRoles([...roles, newRole]);
+    // setPreRoles([...roles, newRole]);
   };
 
   const compareModifiedRoles = (roles1, roles2) => {
@@ -46,7 +71,7 @@ const RoleManager = () => {
     for (let i = 0; i < roles1.length; i++) {
       const role1 = roles1[i];
       const role2 = roles2[i];
-      if (role1.id === role2.id && role1.isActive !== role2.isActive) {
+      if (role1.id === role2.id && role1.is_active !== role2.is_active) {
         return true;
       }
     }
@@ -55,43 +80,89 @@ const RoleManager = () => {
   };
 
   const handleToggleRole = (roleId) => {
-    const updatedRoles = roles.map((role) =>
-      role.id === roleId ? { ...role, isActive: !role.isActive } : role
+    const updatedRoles = preRoles.map((role) =>
+      role.id === roleId ? { ...role, is_active: !role.is_active } : role
     );
-    setRoles(updatedRoles);
-    const hasModiferedRole = compareModifiedRoles(updatedRoles, preRoles);
+    setPreRoles(updatedRoles);
+    const hasModiferedRole = compareModifiedRoles(updatedRoles, roles);
 
     setIsChecked(hasModiferedRole);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     //TODO: send role to server
-    setIsChecked(false);
+    const changedRoles = [];
 
-    setPreRoles(roles);
+    for (let i = 0; i < roles.length; i++) {
+      const role1 = roles[i];
+      const role2 = preRoles[i];
+      if (role1.id === role2.id && role1.is_active !== role2.is_active) {
+        changedRoles.push(role2);
+      }
+    }
+
+    if (changedRoles.length > 0) {
+      try {
+        await updateActiveRoles(changedRoles).unwrap;
+        setIsChecked(false);
+        showToastMessageResponse({
+          severity: "success",
+          message: "Success!",
+        });
+        refetchRoles();
+      } catch (err) {
+        showToastMessageResponse({
+          severity: "error",
+          message: err.data?.message || err.message,
+        });
+      }
+    }
   };
+
+  const handleRemoveRole = async (id) => {};
+
+  useEffect(() => {
+    if (isSuccess && roles) {
+      setPreRoles(roles);
+    }
+  }, [roles, isSuccess]);
 
   return (
     <Box>
+      <ToastMessageResponse
+        toastMessageResponse={toastMessage}
+        onClose={() => {
+          setToastMessage(initialToaseMessage);
+        }}
+      />
       <Typography variant="h3" gutterBottom>
         Danh sách vị trí
       </Typography>
       <Box>
         <FormControl component="fieldset">
-          <FormGroup>
-            {roles.map((role) => (
-              <FormControlLabel
-                key={role.id}
-                control={
-                  <Checkbox
-                    checked={role.isActive}
-                    onChange={() => handleToggleRole(role.id)}
+          {preRoles && (
+            <FormGroup>
+              {preRoles.map((role) => (
+                <FlexBetween width="100%" key={role.id}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={role.is_active}
+                        onChange={() => handleToggleRole(role.id)}
+                      />
+                    }
+                    label={role.name}
                   />
-                }
-                label={role.name}
-              />
-            ))}
-          </FormGroup>
+                  <ErrorIconButton
+                    aria-label="remove role"
+                    onClick={() => handleRemoveRole(role.id)}
+                  >
+                    <RemoveIcon color="error" />
+                  </ErrorIconButton>
+                </FlexBetween>
+              ))}
+            </FormGroup>
+          )}
         </FormControl>
       </Box>
       {isChecked && <Button onClick={handleSave}>Lưu thay đổi</Button>}
@@ -102,14 +173,16 @@ const RoleManager = () => {
             <Typography variant="button">Vị trí mới</Typography>
           </FlexCenter>
         }
-        renderModal={
+        renderModal={({ handleClose }) => (
           <Box bgcolor="darkPallete.dark" p={4}>
             <Typography variant="h3">Thêm vị trí mới</Typography>
             <FlexCenter mt={3}>
-              <CreateNewRoleForm onSubmit={handleCreateRole} />
+              <CreateNewRoleForm
+                onSubmit={(newRole) => handleCreateRole(newRole, handleClose)}
+              />
             </FlexCenter>
           </Box>
-        }
+        )}
       />
     </Box>
   );

@@ -9,10 +9,11 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import { authApi, blogApi, fooApi } from './state/api';
 import { rootReducer } from './state';
 import { cdrApi } from './state/cdrApi';
+import { authorizeApi } from './state/authorizeApi';
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefault) => getDefault().concat(blogApi.middleware, authApi.middleware, fooApi.middleware, cdrApi.middleware),
+  middleware: (getDefault) => getDefault().concat(blogApi.middleware, authApi.middleware, fooApi.middleware, cdrApi.middleware, authorizeApi.middleware),
 });
 setupListeners(store.dispatch);
 

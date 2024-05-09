@@ -43,7 +43,7 @@ const ButtonModal = ({ renderButton, renderModal }) => {
               />
             </IconButton>
           </Box>
-          <Box>{renderModal}</Box>
+          <Box>{renderModal({ handleClose })}</Box>
         </Box>
       </Modal>
     </div>

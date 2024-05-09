@@ -3,6 +3,7 @@ import { authApi, blogApi, fooApi } from './api';
 import authSlice from '../store/authSlice';
 import { cdrApi } from './cdrApi';
 import drawerSlice from '../store/drawerSlice';
+import { authorizeApi } from './authorizeApi';
 
 const rootReducer = combineReducers({
     [blogApi.reducerPath]: blogApi.reducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
     [authSlice.reducerPath]: authSlice.reducer,
     [drawerSlice.reducerPath]: drawerSlice.reducer,
     [cdrApi.reducerPath]: cdrApi.reducer,
+    [authorizeApi.reducerPath]: authorizeApi.reducer,
 });
 
 export { rootReducer };

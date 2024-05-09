@@ -2,13 +2,10 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import FlexBetween from "../../components/FlexBetween";
 import PermissionForm from "./PermissionForm";
+import { useGetRolesQuery } from "../../state/authorizeApi";
 
 const AdminPermission = () => {
-  const roles = [
-    { id: 1, name: "Admin" },
-    { id: 2, name: "User" },
-    // Add more roles as needed
-  ];
+  const { data: roles, isSuccess, refetch: refetchRoles } = useGetRolesQuery();
 
   const permissions = [
     { id: 1, name: "Create" },
@@ -24,7 +21,9 @@ const AdminPermission = () => {
         </Typography>
       </FlexBetween>
       <Box width="100%" height="100%" mt={1}>
-        <PermissionForm roles={roles} permissions={permissions} />
+        {isSuccess && (
+          <PermissionForm roles={roles} permissions={permissions} />
+        )}
       </Box>
     </Box>
   );
